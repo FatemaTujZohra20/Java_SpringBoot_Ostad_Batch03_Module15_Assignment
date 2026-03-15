@@ -13,26 +13,31 @@ public class NoteService {
     @Autowired
     private NoteRepository noteRepository;
     
-    public Note createNote(Note note, String username) {
+    public Note createNote (Note note, String username) {
         note.setOwnerUsername(username);
         return noteRepository.save(note);
     }
     
-    public List<Note> getMyNotes(String username) {
+    public List<Note> getMyNotes (String username) {
         return noteRepository.findByOwnerUsername(username);
     }
     
-    public Optional<Note> getMyNoteById(Long id, String username) {
+    public Optional<Note> getMyNoteById (Long id, String username) {
         return noteRepository.findByIdAndOwnerUsername(id, username);
     }
     
-    public void deleteMyNote(Long id, String username) {
+    public void deleteMyNote (Long id, String username) {
         Note note = noteRepository.findByIdAndOwnerUsername(id, username)
                 .orElseThrow(() -> new RuntimeException("Note not found or Access Denied"));
         noteRepository.delete(note);
     }
     
     // Admin methods
-    public List<Note> getAllNotesForAdmin() { return noteRepository.findAll(); }
-    public void deleteNoteAdmin(Long id) { noteRepository.deleteById(id); }
+    public List<Note> getAllNotesForAdmin () {
+        return noteRepository.findAll();
+    }
+    
+    public void deleteNoteAdmin (Long id) {
+        noteRepository.deleteById(id);
+    }
 }

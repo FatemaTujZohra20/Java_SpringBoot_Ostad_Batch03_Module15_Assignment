@@ -22,9 +22,6 @@ public class AuthController {
         }
         
         // 2. ENCODE the raw password from the request
-//        String encodedPassword = passwordEncoder.encode(user.getPassword());
-//        user.setPassword(encodedPassword);
-        
         String secret = passwordEncoder.encode(user.getPassword());
         user.setPassword(secret);
         
@@ -35,11 +32,6 @@ public class AuthController {
         userRepository.save(user);
         
         return "User registered successfully with ROLE_USER!";
-        
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
-//        user.setRole("ROLE_USER");
-//        userRepository.save(user);
-//        return "User registered successfully";
     }
     
     @PostMapping("/admin")
@@ -51,8 +43,6 @@ public class AuthController {
         
         // 2. ENCODE the raw password
         // This is the step that fixes the "401 Unauthorized" error
-//        String encodedPassword = passwordEncoder.encode(user.getPassword());
-//        user.setPassword(encodedPassword);
         String secret = passwordEncoder.encode(user.getPassword());
         user.setPassword(secret);
         
@@ -64,10 +54,5 @@ public class AuthController {
         userRepository.save(user);
         
         return "Admin registered successfully with ROLE_ADMIN!";
-        
-//        user.setPassword(passwordEncoder.encode(user.getPassword()));
-//        user.setRole("ROLE_ADMIN");
-//        userRepository.save(user);
-//        return "Admin registered successfully";
     }
 }
