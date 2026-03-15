@@ -6,7 +6,9 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
+@Service
 public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
     
@@ -27,7 +29,8 @@ public class CustomUserDetailsService implements UserDetailsService {
         return User.builder()
                 .username(user.getUsername())
                 .password(user.getPassword()) // This must be a BCrypt hash
-                .roles(user.getRole().replace("ROLE_", ""))
+                .authorities(user.getRole())
+//                .roles(user.getRole().replace("ROLE_", ""))
                 .build();
     }
 }

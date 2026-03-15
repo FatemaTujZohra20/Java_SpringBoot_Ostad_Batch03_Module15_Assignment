@@ -16,17 +16,58 @@ public class AuthController {
     
     @PostMapping("/user")
     public String registerUser (@RequestBody UserEntity user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        // 1. Check if user already exists (Optional but good)
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            return "Error: Username is already taken!";
+        }
+        
+        // 2. ENCODE the raw password from the request
+//        String encodedPassword = passwordEncoder.encode(user.getPassword());
+//        user.setPassword(encodedPassword);
+        
+        String secret = passwordEncoder.encode(user.getPassword());
+        user.setPassword(secret);
+        
+        // 3. SET THE ROLE (Requirement: ROLE_USER)
         user.setRole("ROLE_USER");
+        
+        // 4. SAVE to Database
         userRepository.save(user);
-        return "User registered successfully";
+        
+        return "User registered successfully with ROLE_USER!";
+        
+//        user.setPassword(passwordEncoder.encode(user.getPassword()));
+//        user.setRole("ROLE_USER");
+//        userRepository.save(user);
+//        return "User registered successfully";
     }
     
     @PostMapping("/admin")
     public String registerAdmin (@RequestBody UserEntity user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        // 1. Check if user already exists
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            return "Error: Username is already taken!";
+        }
+        
+        // 2. ENCODE the raw password
+        // This is the step that fixes the "401 Unauthorized" error
+//        String encodedPassword = passwordEncoder.encode(user.getPassword());
+//        user.setPassword(encodedPassword);
+        String secret = passwordEncoder.encode(user.getPassword());
+        user.setPassword(secret);
+        
+        // 3. SET THE ROLE (Requirement: ROLE_ADMIN)
+        // Spring Security expects roles to start with "ROLE_" by default
         user.setRole("ROLE_ADMIN");
+        
+        // 4. SAVE to Database
         userRepository.save(user);
-        return "Admin registered successfully";
+        
+        return "Admin registered successfully with ROLE_ADMIN!";
+        
+//        user.setPassword(passwordEncoder.encode(user.getPassword()));
+//        user.setRole("ROLE_ADMIN");
+//        userRepository.save(user);
+//        return "Admin registered successfully";
     }
 }
